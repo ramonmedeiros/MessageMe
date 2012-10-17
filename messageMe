@@ -3,58 +3,5 @@
 #
 # IMPORTS
 #
-import argparse
-import os
-import sys
 
-
-#
-# CONSTANTS
-#
-CREATE_IMAGE = '--create-image'
-CREATE_KEYS = '--create-keys'
-MOUNT_IMAGE = "--mount-image"
-UMOUNT_IMAGE = "--umount-image"
-
-#
-# CODE
-#
-def parseCommandLine():
-    """
-    Parses command line
-
-    @rtype: int
-    @returns: exit status
-    """
-    # get args
-    parser = argparse.ArgumentParser()
-
-    # set args
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(CREATE_IMAGE, help="Create a simple image")
-    group.add_argument(CREATE_KEYS, action="store_true", help="Generate the key")
-    group.add_argument(MOUNT_IMAGE, help="Mounts the image")
-    group.add_argument(UMOUNT_IMAGE, help="Umount a passed image")
-    parser.add_argument('-s', '--size', type=int, choices=[1024], help="Set key size")
-    parser.add_argument('-t', '--type', choices=["RSA", "DSA"], help="Type of algorithm")
-    parser.add_argument('--password', help="Key password")
-
-    # parse args
-    args = parser.parse_args()
-    
-    # return success
-    return 0
-# parseCommandLine()
-
-
-#
-# ENTRY POINT
-#
-if __name__ == '__main__':
-    
-    # set path
-    sys.path.insert(os.getcwd())
-
-    # do main
-    parseCommandLine()
-
+print 'Oi'
