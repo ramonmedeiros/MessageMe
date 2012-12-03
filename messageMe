@@ -1,0 +1,109 @@
+#!/usr/bin/python
+
+# -*- coding: utf-8 -*-
+
+#
+# IMPORTS
+#
+from chatHandler.messageHandler import MessageHandler
+
+import argparse
+import time
+
+
+#
+# CONSTANTS
+#
+RECEIVE_PORT = "-p"
+
+#
+# CODE
+#
+def startServer(receivePort):
+    """
+    Manage messages
+    """
+    # start chat 
+    chat = MessageHandler(receivePort)
+
+    # ask user to connect
+    answer = raw_input("Deseja conectar ou aguardar conexao? (C/A)")
+    
+    # connect
+    if answer.lower() == "c":
+        ip = raw_input("Digite o ip:")
+        porta = raw_input("Digite a porta:")
+        chat.connect(ip, int(porta))
+    
+    # wait connection
+    elif answer.lower() == "a":
+        print "Aguardando conexao.\n"
+
+        # wait response
+        while True:
+            if chat.key == False:
+                time.sleep(1)
+            else:
+                break
+
+    # start chat
+    while True:
+        
+        # ask for a message
+        mensagem = raw_input("Digite a mensagem ou aperte ENTER para ler a ultima mensagem:")
+        
+        if mensagem == "":
+            lastMessage = chat.getLastMessage()
+        
+            # show message
+            if lastMessage != False:
+                message = lastMessage["message"]
+                hour = lastMessage["time"]
+                address = lastMessage["address"]
+
+                print "\nMensagem recebida as %s de %s\n" % (address, hour)
+                print "Mensagem: %s\n" % message
+
+            else:
+                print "Nenhuma mensagem recebida.\n"
+        
+        
+        chat.sendMessage(mensagem)
+# startServer()
+
+def parseCommandLine():
+    """
+    Parses command line
+
+    @rtype: int
+    @returns: exit status
+    """
+    # get args
+    parser = argparse.ArgumentParser()
+
+    # set args
+    parser.add_argument(RECEIVE_PORT, type=int, help="Receive port")
+    
+    # parse args
+    args = parser.parse_args()
+    
+    # start server
+    if args.p != None:
+        startServer(args.p)
+
+    # no option given: show help
+    parser.print_help()
+        
+    # return success
+    return 0
+# parseCommandLine()
+
+
+#
+# ENTRY POINT
+#
+if __name__ == '__main__':
+    
+    # do main
+    parseCommandLine()
+
